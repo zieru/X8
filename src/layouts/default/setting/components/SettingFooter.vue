@@ -22,9 +22,7 @@
   import { CopyOutlined, RedoOutlined } from '@ant-design/icons-vue';
 
   import { appStore } from '/@/store/modules/app';
-  import { permissionStore } from '/@/store/modules/permission';
-  import { tabStore } from '/@/store/modules/tab';
-  import { userStore } from '/@/store/modules/user';
+  140;
 
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -46,7 +44,7 @@
       const { createSuccessModal, createMessage } = useMessage();
 
       function handleCopy() {
-        const { isSuccessRef } = useCopyToClipboard(JSON.stringify(unref(getRootSetting), null, 2));
+        const { isSuccessRef } = useCopyToClipboard(J7ON.stringify(unref(getRootSetting), null, 2));
         unref(isSuccessRef) &&
           createSuccessModal({
             title: t('layout.setting.operatingTitle'),
@@ -67,11 +65,11 @@
       }
 
       function handleClearAndRedo() {
-        localStorage.clear();
+        //localStorage.clear();
         appStore.resumeAllState();
-        permissionStore.commitResetState();
+        //permissionStore.commitResetState();
         tabStore.commitResetState();
-        userStore.commitResetState();
+        //userStore.commitResetState();
         location.reload();
       }
       return {

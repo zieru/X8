@@ -74,7 +74,8 @@ export default class App extends VuexModule {
   @Action
   async resumeAllState() {
     resetRouter();
-    Persistent.clearAll();
+    //Persistent.clearAll();
+    Persistent.removeLocal(PROJ_CFG_KEY);
   }
 
   @Action
