@@ -12,7 +12,6 @@ import { SIDE_BAR_BG_COLOR_LIST, HEADER_PRESET_BG_COLOR_LIST } from './designSet
 import { primaryColor, themeMode } from '../../build/config/themeConfig';
 
 // ! You need to clear the browser cache after the change
-alert(HEADER_PRESET_BG_COLOR_LIST[0]);
 const setting: ProjectConfig = {
   // Whether to show the configuration button
   showSettingButton: true,
@@ -48,7 +47,7 @@ const setting: ProjectConfig = {
   showLogo: true,
 
   // Whether to show footer
-  showFooter: true,
+  showFooter: false,
 
   // Header configuration
   headerSetting: {
@@ -59,7 +58,7 @@ const setting: ProjectConfig = {
     // Whether to show top
     show: true,
     // theme
-    theme: ThemeEnum.DARK,
+    theme: ThemeEnum.LIGHT,
     // Whether to enable the lock screen function
     useLockPage: true,
 
@@ -97,7 +96,7 @@ const setting: ProjectConfig = {
     // Menu type
     type: MenuTypeEnum.SIDEBAR,
     // Menu theme
-    theme: ThemeEnum.LIGHT,
+    theme: ThemeEnum.DARK,
     // Split menu
     split: false,
     // Top menu layout
@@ -117,7 +116,7 @@ const setting: ProjectConfig = {
   // Multi-label
   multiTabsSetting: {
     // Turn on
-    show: false,
+    show: true,
     // Is it possible to drag and drop sorting tabs
     canDrag: true,
     // Turn on quick actions
@@ -143,7 +142,7 @@ const setting: ProjectConfig = {
     openPageLoading: true,
 
     // Whether to open the top progress bar
-    openNProgress: true,
+    openNProgress: false,
   },
 
   // Whether to enable KeepAlive cache is best to close during development, otherwise the cache needs to be cleared every time
