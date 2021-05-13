@@ -36,7 +36,7 @@
       :height="getWrapperHeight"
       :visible="visibleRef"
       :modalFooterHeight="footer !== undefined && !footer ? 0 : undefined"
-      v-bind="omit(getProps.wrapperProps, 'visible', 'height')"
+      v-bind="omit(getProps.wrapperProps, 'visible', 'height', 'modalFooterHeight')"
       @ext-height="handleExtHeight"
       @height-change="handleHeightChange"
     >
@@ -122,12 +122,14 @@
         wrapClassName: toRef(getMergeProps.value, 'wrapClassName'),
       });
 
-      // modal component does not need title
+      // modal component does not need title and origin buttons
       const getProps = computed(
         (): ModalProps => {
           const opt = {
             ...unref(getMergeProps),
             visible: unref(visibleRef),
+            okButtonProps: undefined,
+            cancelButtonProps: undefined,
             title: undefined,
           };
           return {

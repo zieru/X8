@@ -185,9 +185,13 @@
         searchState.startSearch = true;
         const { title: titleField } = unref(getReplaceFields);
 
-        searchState.searchData = filter(unref(treeDataRef), (node) => {
-          return node[titleField]?.includes(searchValue) ?? false;
-        });
+        searchState.searchData = filter(
+          unref(treeDataRef),
+          (node) => {
+            return node[titleField]?.includes(searchValue) ?? false;
+          },
+          unref(getReplaceFields)
+        );
       }
 
       function handleClickNode(key: string, children: TreeItem[]) {
@@ -305,7 +309,11 @@
                     ) : (
                       <>
                         {icon && <TreeIcon icon={icon} />}
-                        <span class={`${prefixCls}__content`}>{get(item, titleField)}</span>
+                        <span
+                          class={unref(getBindValues)?.blockNode ? `${prefixCls}__content` : ''}
+                        >
+                          {get(item, titleField)}
+                        </span>
                         <span class={`${prefixCls}__actions`}>
                           {renderAction({ ...item, level })}
                         </span>
@@ -324,7 +332,7 @@
         const showTitle = title || toolbar || search || slots.headerTitle;
         const scrollStyle: CSSProperties = { height: 'calc(100% - 38px)' };
         return (
-          <div class={[prefixCls, 'h-full bg-white', attrs.class]}>
+          <div class={[prefixCls, 'h-full', attrs.class]}>
             {showTitle && (
               <TreeHeader
                 checkable={checkable}
@@ -361,6 +369,8 @@
   @prefix-cls: ~'@{namespace}-basic-tree';
 
   .@{prefix-cls} {
+    background-color: @component-background;
+
     .ant-tree-node-content-wrapper {
       position: relative;
 

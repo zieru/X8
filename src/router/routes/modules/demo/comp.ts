@@ -89,6 +89,14 @@ const comp: AppRouteModule = {
             title: t('routes.demo.form.customerForm'),
           },
         },
+        {
+          path: 'appendForm',
+          name: 'appendFormDemo',
+          component: () => import('/@/views/demo/form/AppendForm.vue'),
+          meta: {
+            title: t('routes.demo.form.appendForm'),
+          },
+        },
       ],
     },
     {
@@ -222,6 +230,14 @@ const comp: AppRouteModule = {
             title: t('routes.demo.table.editRowTable'),
           },
         },
+        {
+          path: 'authColumn',
+          name: 'AuthColumnDemo',
+          component: () => import('/@/views/demo/table/AuthColumn.vue'),
+          meta: {
+            title: t('routes.demo.table.authColumn'),
+          },
+        },
       ],
     },
     {
@@ -240,6 +256,7 @@ const comp: AppRouteModule = {
         title: t('routes.demo.comp.cropperImage'),
       },
     },
+
     {
       path: 'timestamp',
       name: 'TimeDemo',
@@ -302,6 +319,14 @@ const comp: AppRouteModule = {
         title: t('routes.demo.editor.editor'),
       },
       children: [
+        {
+          path: 'json',
+          component: () => import('/@/views/demo/editor/json/index.vue'),
+          name: 'JsonEditorDemo',
+          meta: {
+            title: t('routes.demo.editor.jsonEditor'),
+          },
+        },
         {
           path: 'markdown',
           component: getParentLayout('MarkdownDemo'),

@@ -47,6 +47,10 @@ const menu: MenuModule = {
             path: 'customerForm',
             name: t('routes.demo.form.customerForm'),
           },
+          {
+            path: 'appendForm',
+            name: t('routes.demo.form.appendForm'),
+          },
         ],
       },
       {
@@ -114,14 +118,15 @@ const menu: MenuModule = {
             path: 'editRowTable',
             name: t('routes.demo.table.editRowTable'),
           },
+          {
+            path: 'authColumn',
+            name: t('routes.demo.table.authColumn'),
+          },
         ],
       },
       {
         path: 'cropper',
         name: t('routes.demo.comp.cropperImage'),
-        tag: {
-          content: 'new',
-        },
       },
       {
         path: 'countTo',
@@ -186,7 +191,17 @@ const menu: MenuModule = {
       {
         name: t('routes.demo.editor.editor'),
         path: 'editor',
+        tag: {
+          dot: true,
+        },
         children: [
+          {
+            path: 'json',
+            name: t('routes.demo.editor.jsonEditor'),
+            tag: {
+              content: 'new',
+            },
+          },
           {
             path: 'markdown',
             name: t('routes.demo.editor.markdown'),

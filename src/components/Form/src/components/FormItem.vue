@@ -24,19 +24,19 @@
     props: {
       schema: {
         type: Object as PropType<FormSchema>,
-        default: () => {},
+        default: () => ({}),
       },
       formProps: {
         type: Object as PropType<FormProps>,
-        default: {},
+        default: () => ({}),
       },
       allDefaultValues: {
         type: Object as PropType<Recordable>,
-        default: {},
+        default: () => ({}),
       },
       formModel: {
         type: Object as PropType<Recordable>,
-        default: {},
+        default: () => ({}),
       },
       setFormModel: {
         type: Function as PropType<(key: string, value: any) => void>,
@@ -170,8 +170,8 @@
             if (component.includes('Input') || component.includes('Textarea')) {
               rule.whitespace = true;
             }
-
-            setComponentRuleType(rule, component);
+            const valueFormat = unref(getComponentsProps)?.valueFormat;
+            setComponentRuleType(rule, component, valueFormat);
           }
         }
 
@@ -203,14 +203,12 @@
             if (propsData[eventKey]) {
               propsData[eventKey](e);
             }
-
             const target = e ? e.target : null;
-
             const value = target ? (isCheck ? target.checked : target.value) : e;
             props.setFormModel(field, value);
           },
         };
-        const Comp = componentMap.get(component) as typeof defineComponent;
+        const Comp = componentMap.get(component) as ReturnType<typeof defineComponent>;
 
         const { autoSetPlaceHolder, size } = props.formProps;
         const propsData: Recordable = {
@@ -258,7 +256,7 @@
         const { label, helpMessage, helpComponentProps, subLabel } = props.schema;
         const renderLabel = subLabel ? (
           <span>
-            {label} <span style="color:#00000073">{subLabel}</span>
+            {label} <span class="text-secondary">{subLabel}</span>
           </span>
         ) : (
           label

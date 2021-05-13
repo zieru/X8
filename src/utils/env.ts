@@ -30,11 +30,12 @@ export function getAppEnvConfig() {
     VITE_GLOB_UPLOAD_URL,
   } = ENV;
 
-  if (!/[a-zA-Z\_]*/.test(VITE_GLOB_APP_SHORT_NAME)) {
+  if (!/^[a-zA-Z\_]*$/.test(VITE_GLOB_APP_SHORT_NAME)) {
     warn(
       `VITE_GLOB_APP_SHORT_NAME Variables can only be characters/underscores, please modify in the environment variables and re-running.`
     );
   }
+
   return {
     VITE_GLOB_APP_TITLE,
     VITE_GLOB_API_URL,

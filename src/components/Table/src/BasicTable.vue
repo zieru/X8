@@ -4,7 +4,6 @@
       submitOnReset
       v-bind="getFormProps"
       v-if="getBindValues.useSearchForm"
-      :submitButtonOptions="{ loading: getLoading }"
       :tableAction="tableAction"
       @register="registerForm"
       @submit="handleSearchInfoChange"
@@ -182,7 +181,7 @@
         replaceFormSlotKey,
         getFormSlotKeys,
         handleSearchInfoChange,
-      } = useTableForm(getProps, slots, fetch);
+      } = useTableForm(getProps, slots, fetch, getLoading);
 
       const getBindValues = computed(() => {
         const dataSource = unref(getDataSourceRef);
@@ -299,20 +298,20 @@
   @prefix-cls: ~'@{namespace}-basic-table';
 
   .@{prefix-cls} {
+    &-row__striped {
+      td {
+        background-color: content-background;
+      }
+    }
+
     &-form-container {
       padding: 16px;
 
       .ant-form {
         padding: 12px 10px 6px 10px;
         margin-bottom: 16px;
-        background: #fff;
-        border-radius: 4px;
-      }
-    }
-
-    &-row__striped {
-      td {
-        background: #fafafa;
+        background-color: @component-background;
+        border-radius: 2px;
       }
     }
 
@@ -328,10 +327,11 @@
 
     .ant-table-wrapper {
       padding: 6px;
-      background: #fff;
+      background-color: @component-background;
       border-radius: 2px;
 
       .ant-table-title {
+        min-height: 40px;
         padding: 0 0 8px 0 !important;
       }
 
@@ -340,7 +340,6 @@
       }
     }
 
-    //
     .ant-table {
       width: 100%;
       overflow-x: hidden;
@@ -354,7 +353,7 @@
       }
 
       .ant-table-tbody > tr.ant-table-row-selected td {
-        background: fade(@primary-color, 8%) !important;
+        background-color: fade(@primary-color, 8%) !important;
       }
     }
 

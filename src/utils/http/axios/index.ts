@@ -16,7 +16,8 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
-import { errorStore } from '/@/store/modules/error';
+import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
+
 import { errorResult } from './const';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { createNow, formatRequestDate } from './helper';
@@ -34,7 +35,11 @@ const transform: AxiosTransform = {
    */
   transformRequestHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
     const { t } = useI18n();
-    const { isTransformRequestResult } = options;
+    const { isTransformRequestResult, isReturnNativeResponse } = options;
+    // 是否返回原生响应头 比如：需要获取响应头时使用该属性
+    if (isReturnNativeResponse) {
+      return res;
+    }
     // 不进行任何处理，直接返回
     // 用于页面代码可能需要直接获取code，data，message这些信息时开启
     if (!isTransformRequestResult) {
@@ -150,7 +155,8 @@ const transform: AxiosTransform = {
    */
   responseInterceptorsCatch: (error: any) => {
     const { t } = useI18n();
-    errorStore.setupErrorHandle(error);
+    const errorLogStore = useErrorLogStoreWithOut();
+    errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message } = error || {};
     const msg: string = response?.data?.error?.message ?? '';
     const err: string = error?.toString?.() ?? '';
@@ -190,6 +196,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         requestOptions: {
           // 默认将prefix 添加到url
           joinPrefix: true,
+          // 是否返回原生响应头 比如：需要获取响应头时使用该属性
+          isReturnNativeResponse: false,
           // 需要对返回数据进行处理
           isTransformRequestResult: true,
           // post请求的时候添加参数到url
