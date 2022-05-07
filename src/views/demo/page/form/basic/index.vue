@@ -16,19 +16,21 @@
   import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
+    name: 'FormBasicPage',
     components: { BasicForm, PageWrapper },
     setup() {
       const { createMessage } = useMessage();
       const [register, { validate, setProps }] = useForm({
         labelCol: {
-          span: 7,
+          span: 8,
         },
         wrapperCol: {
-          span: 10,
+          span: 15,
         },
         schemas: schemas,
         actionColOptions: {
           offset: 8,
+          span: 23,
         },
         submitButtonOptions: {
           text: '提交',

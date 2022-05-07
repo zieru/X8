@@ -2,17 +2,15 @@
   <PageWrapper
     class="high-form"
     title="高级表单"
-    contentBackground
     content=" 高级表单常见于一次性输入和提交大批量数据的场景。"
-    contentClass="p-4"
   >
     <a-card title="仓库管理" :bordered="false">
       <BasicForm @register="register" />
     </a-card>
-    <a-card title="任务管理" :bordered="false" class="mt-5">
+    <a-card title="任务管理" :bordered="false" class="!mt-5">
       <BasicForm @register="registerTask" />
     </a-card>
-    <a-card title="成员管理" :bordered="false" class="mt-5">
+    <a-card title="成员管理" :bordered="false">
       <PersonTable ref="tableRef" />
     </a-card>
 
@@ -30,11 +28,13 @@
   import { Card } from 'ant-design-vue';
 
   export default defineComponent({
+    name: 'FormHightPage',
     components: { BasicForm, PersonTable, PageWrapper, [Card.name]: Card },
     setup() {
       const tableRef = ref<{ getDataSource: () => any } | null>(null);
 
       const [register, { validate }] = useForm({
+        layout: 'vertical',
         baseColProps: {
           span: 6,
         },
@@ -43,6 +43,7 @@
       });
 
       const [registerTask, { validate: validateTaskForm }] = useForm({
+        layout: 'vertical',
         baseColProps: {
           span: 6,
         },

@@ -8,7 +8,7 @@
   >
     <div :class="`${prefixCls}__entry`">
       <div :class="`${prefixCls}__header`">
-        <img :src="headerImg" :class="`${prefixCls}__header-img`" />
+        <img :src="avatar" :class="`${prefixCls}__header-img`" />
         <p :class="`${prefixCls}__header-name`">
           {{ getRealName }}
         </p>
@@ -53,6 +53,9 @@
           {
             field: 'password',
             label: t('layout.header.lockScreenPassword'),
+            colProps: {
+              span: 24,
+            },
             component: 'InputPassword',
             required: true,
           },
@@ -71,6 +74,11 @@
         await resetFields();
       }
 
+      const avatar = computed(() => {
+        const { avatar } = userStore.getUserInfo;
+        return avatar || headerImg;
+      });
+
       return {
         t,
         prefixCls,
@@ -78,7 +86,7 @@
         register,
         registerForm,
         handleLock,
-        headerImg,
+        avatar,
       };
     },
   });
@@ -89,8 +97,8 @@
   .@{prefix-cls} {
     &__entry {
       position: relative;
-      height: 240px;
-      padding: 130px 30px 60px 30px;
+      //height: 240px;
+      padding: 130px 30px 30px;
       border-radius: 10px;
     }
 

@@ -1,7 +1,7 @@
 <template>
   <List :class="prefixCls">
     <a-row :gutter="16">
-      <template v-for="(item, index) in list" :key="index">
+      <template v-for="item in list" :key="item.title">
         <a-col :span="6">
           <ListItem>
             <Card :hoverable="true" :class="`${prefixCls}__card`">
@@ -48,7 +48,7 @@
       width: 100%;
 
       .ant-card-body {
-        padding: 0 0 24px 0;
+        padding: 0 0 24px;
       }
 
       img {
@@ -60,7 +60,7 @@
         margin: 5px 10px;
         font-size: 16px;
         font-weight: 500;
-        color: rgba(0, 0, 0, 0.85);
+        color: rgb(0 0 0 / 85%);
       }
 
       &-content {

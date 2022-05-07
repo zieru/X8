@@ -1,24 +1,90 @@
 <template>
-  <PageWrapper title="表单基础示例">
+  <PageWrapper title="表单基础示例" contentFullHeight>
     <CollapseContainer title="基础示例">
       <BasicForm
         autoFocusFirstItem
-        :labelWidth="100"
+        :labelWidth="200"
         :schemas="schemas"
         :actionColOptions="{ span: 24 }"
         @submit="handleSubmit"
-      />
+        @reset="handleReset"
+      >
+        <template #selectA="{ model, field }">
+          <a-select
+            :options="optionsA"
+            mode="multiple"
+            v-model:value="model[field]"
+            @change="valueSelectA = model[field]"
+            allowClear
+          />
+        </template>
+        <template #selectB="{ model, field }">
+          <a-select
+            :options="optionsB"
+            mode="multiple"
+            v-model:value="model[field]"
+            @change="valueSelectB = model[field]"
+            allowClear
+          />
+        </template>
+        <template #localSearch="{ model, field }">
+          <ApiSelect
+            :api="optionsListApi"
+            showSearch
+            v-model:value="model[field]"
+            optionFilterProp="label"
+            resultField="list"
+            labelField="name"
+            valueField="id"
+          />
+        </template>
+        <template #remoteSearch="{ model, field }">
+          <ApiSelect
+            :api="optionsListApi"
+            showSearch
+            v-model:value="model[field]"
+            :filterOption="false"
+            resultField="list"
+            labelField="name"
+            valueField="id"
+            :params="searchParams"
+            @search="onSearch"
+          />
+        </template>
+      </BasicForm>
     </CollapseContainer>
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import { BasicForm, FormSchema } from '/@/components/Form/index';
-  import { CollapseContainer } from '/@/components/Container/index';
+  import { computed, defineComponent, unref, ref } from 'vue';
+  import { BasicForm, FormSchema, ApiSelect } from '/@/components/Form/index';
+  import { CollapseContainer } from '/@/components/Container';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
 
   import { optionsListApi } from '/@/api/demo/select';
+  import { useDebounceFn } from '@vueuse/core';
+  import { treeOptionsListApi } from '/@/api/demo/tree';
+  import { Select } from 'ant-design-vue';
+  import { cloneDeep } from 'lodash-es';
+
+  const valueSelectA = ref<string[]>([]);
+  const valueSelectB = ref<string[]>([]);
+  const options = ref<Recordable[]>([]);
+  for (let i = 1; i < 10; i++) options.value.push({ label: '选项' + i, value: `${i}` });
+
+  const optionsA = computed(() => {
+    return cloneDeep(unref(options)).map((op) => {
+      op.disabled = unref(valueSelectB).indexOf(op.value) !== -1;
+      return op;
+    });
+  });
+  const optionsB = computed(() => {
+    return cloneDeep(unref(options)).map((op) => {
+      op.disabled = unref(valueSelectA).indexOf(op.value) !== -1;
+      return op;
+    });
+  });
 
   const provincesOptions = [
     {
@@ -72,6 +138,14 @@
   };
 
   const schemas: FormSchema[] = [
+    {
+      field: 'divider-basic',
+      component: 'Divider',
+      label: '基础字段',
+      colProps: {
+        span: 24,
+      },
+    },
     {
       field: 'field1',
       component: 'Input',
@@ -265,14 +339,39 @@
         ],
       },
     },
-
+    {
+      field: 'divider-api-select',
+      component: 'Divider',
+      label: '远程下拉演示',
+      colProps: {
+        span: 24,
+      },
+    },
     {
       field: 'field30',
       component: 'ApiSelect',
-      label: '远程下拉',
+      label: '懒加载远程下拉',
       required: true,
       componentProps: {
+        // more details see /src/components/Form/src/components/ApiSelect.vue
         api: optionsListApi,
+        params: {
+          id: 1,
+        },
+        resultField: 'list',
+        // use name as label
+        labelField: 'name',
+        // use id as value
+        valueField: 'id',
+        // not request untill to select
+        immediate: false,
+        onChange: (e) => {
+          console.log('selected:', e);
+        },
+        // atfer request callback
+        onOptionsChange: (options) => {
+          console.log('get options', options.length, options);
+        },
       },
       colProps: {
         span: 8,
@@ -280,12 +379,114 @@
       defaultValue: '0',
     },
     {
-      field: 'field20',
-      component: 'InputNumber',
-      label: '字段20',
+      field: 'field31',
+      component: 'Input',
+      label: '下拉本地搜索',
+      helpMessage: ['ApiSelect组件', '远程数据源本地搜索', '只发起一次请求获取所有选项'],
       required: true,
+      slot: 'localSearch',
       colProps: {
         span: 8,
+      },
+      defaultValue: '0',
+    },
+    {
+      field: 'field32',
+      component: 'Input',
+      label: '下拉远程搜索',
+      helpMessage: ['ApiSelect组件', '将关键词发送到接口进行远程搜索'],
+      required: true,
+      slot: 'remoteSearch',
+      colProps: {
+        span: 8,
+      },
+      defaultValue: '0',
+    },
+    {
+      field: 'field33',
+      component: 'ApiTreeSelect',
+      label: '远程下拉树',
+      helpMessage: ['ApiTreeSelect组件', '使用接口提供的数据生成选项'],
+      required: true,
+      componentProps: {
+        api: treeOptionsListApi,
+        resultField: 'list',
+      },
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'field34',
+      component: 'ApiRadioGroup',
+      label: '远程Radio',
+      helpMessage: ['ApiRadioGroup组件', '使用接口提供的数据生成选项'],
+      required: true,
+      componentProps: {
+        api: optionsListApi,
+        params: {
+          count: 2,
+        },
+        resultField: 'list',
+        // use name as label
+        labelField: 'name',
+        // use id as value
+        valueField: 'id',
+      },
+      defaultValue: '1',
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'field35',
+      component: 'ApiRadioGroup',
+      label: '远程Radio',
+      helpMessage: ['ApiRadioGroup组件', '使用接口提供的数据生成选项'],
+      required: true,
+      componentProps: {
+        api: optionsListApi,
+        params: {
+          count: 2,
+        },
+        resultField: 'list',
+        // use name as label
+        labelField: 'name',
+        // use id as value
+        valueField: 'id',
+        isBtn: true,
+      },
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'field36',
+      component: 'ApiTree',
+      label: '远程Tree',
+      helpMessage: ['ApiTree组件', '使用接口提供的数据生成选项'],
+      required: true,
+      componentProps: {
+        api: treeOptionsListApi,
+        params: {
+          count: 2,
+        },
+        afterFetch: (v) => {
+          //do something
+          return v;
+        },
+        resultField: 'list',
+      },
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'divider-linked',
+      component: 'Divider',
+      label: '字段联动',
+      colProps: {
+        span: 24,
       },
     },
     {
@@ -334,6 +535,71 @@
       },
     },
     {
+      field: 'divider-selects',
+      component: 'Divider',
+      label: '互斥多选',
+      helpMessage: ['两个Select共用数据源', '但不可选择对方已选中的项目'],
+      colProps: {
+        span: 24,
+      },
+    },
+    {
+      field: 'selectA',
+      component: 'Select',
+      label: '互斥SelectA',
+      slot: 'selectA',
+      defaultValue: [],
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'selectB',
+      component: 'Select',
+      label: '互斥SelectB',
+      slot: 'selectB',
+      defaultValue: [],
+      colProps: {
+        span: 8,
+      },
+    },
+    {
+      field: 'divider-deconstruct',
+      component: 'Divider',
+      label: '字段解构',
+      helpMessage: ['如果组件的值是 array 或者 object', '可以根据 ES6 的解构语法分别取值'],
+      colProps: {
+        span: 24,
+      },
+    },
+    {
+      field: '[startTime, endTime]',
+      label: '时间范围',
+      component: 'RangePicker',
+      componentProps: {
+        format: 'YYYY-MM-DD HH:mm:ss',
+        placeholder: ['开始时间', '结束时间'],
+        showTime: { format: 'HH:mm:ss' },
+      },
+    },
+    {
+      field: 'divider-others',
+      component: 'Divider',
+      label: '其它',
+      colProps: {
+        span: 24,
+      },
+    },
+    {
+      field: 'field20',
+      component: 'InputNumber',
+      label: '字段20',
+      required: true,
+      colProps: {
+        span: 8,
+      },
+    },
+    {
       field: 'field21',
       component: 'Slider',
       label: '字段21',
@@ -350,16 +616,48 @@
         span: 8,
       },
     },
+    {
+      field: 'field22',
+      component: 'Rate',
+      label: '字段22',
+      defaultValue: 3,
+      colProps: {
+        span: 8,
+      },
+      componentProps: {
+        disabled: false,
+        allowHalf: true,
+      },
+    },
   ];
 
   export default defineComponent({
-    components: { BasicForm, CollapseContainer, PageWrapper },
+    components: { BasicForm, CollapseContainer, PageWrapper, ApiSelect, ASelect: Select },
     setup() {
       const check = ref(null);
       const { createMessage } = useMessage();
+      const keyword = ref<string>('');
+      const searchParams = computed<Recordable>(() => {
+        return { keyword: unref(keyword) };
+      });
+
+      function onSearch(value: string) {
+        keyword.value = value;
+      }
       return {
         schemas,
+        optionsListApi,
+        optionsA,
+        optionsB,
+        valueSelectA,
+        valueSelectB,
+        onSearch: useDebounceFn(onSearch, 300),
+        searchParams,
+        handleReset: () => {
+          keyword.value = '';
+        },
         handleSubmit: (values: any) => {
+          console.log('values', values);
           createMessage.success('click search,values:' + JSON.stringify(values));
         },
         check,

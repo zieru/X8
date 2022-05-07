@@ -1,6 +1,6 @@
 <template>
   <List item-layout="vertical" :class="prefixCls">
-    <template v-for="(item, index) in list" :key="index">
+    <template v-for="item in list" :key="item.title">
       <ListItem>
         <ListItemMeta>
           <template #description>
@@ -13,7 +13,7 @@
               {{ item.title }}
             </p>
             <div>
-              <template v-for="(tag, ti) in item.description" :key="ti">
+              <template v-for="tag in item.description" :key="tag">
                 <Tag class="mb-2">
                   {{ tag }}
                 </Tag>
@@ -22,7 +22,7 @@
           </template>
         </ListItemMeta>
         <div>
-          <template v-for="(action, ai) in actions" :key="ai">
+          <template v-for="action in actions" :key="action.text">
             <div :class="`${prefixCls}__action`">
               <Icon
                 v-if="action.icon"
@@ -70,17 +70,17 @@
     }
 
     &__content {
-      color: rgba(0, 0, 0, 0.65);
+      color: rgb(0 0 0 / 65%);
     }
 
     &__action {
       display: inline-block;
       padding: 0 16px;
-      color: rgba(0, 0, 0, 0.45);
+      color: rgb(0 0 0 / 45%);
 
       &:nth-child(1),
       &:nth-child(2) {
-        border-right: 1px solid rgba(206, 206, 206, 0.4);
+        border-right: 1px solid rgb(206 206 206 / 40%);
       }
 
       &-icon {
@@ -91,7 +91,7 @@
     &__time {
       position: absolute;
       right: 20px;
-      color: rgba(0, 0, 0, 0.45);
+      color: rgb(0 0 0 / 45%);
     }
   }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white m-4 mr-0 overflow-hidden">
+  <div class="m-4 mr-0 overflow-hidden bg-white">
     <BasicTree
       title="部门列表"
       toolbar
       search
       :clickRowToExpand="false"
       :treeData="treeData"
-      :replaceFields="{ key: 'id', title: 'deptName' }"
+      :fieldNames="{ key: 'id', title: 'deptName' }"
       @select="handleSelect"
     />
   </div>
@@ -26,12 +26,11 @@
       const treeData = ref<TreeItem[]>([]);
 
       async function fetch() {
-        treeData.value = ((await getDeptList()) as unknown) as TreeItem[];
+        treeData.value = (await getDeptList()) as unknown as TreeItem[];
       }
 
-      function handleSelect(keys: string, e) {
+      function handleSelect(keys) {
         emit('select', keys[0]);
-        console.log(keys, e);
       }
 
       onMounted(() => {

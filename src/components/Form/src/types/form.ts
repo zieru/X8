@@ -1,11 +1,11 @@
 import type { NamePath, RuleObject } from 'ant-design-vue/lib/form/interface';
 import type { VNode } from 'vue';
-import type { ButtonProps as AntdButtonProps } from 'ant-design-vue/es/button/buttonTypes';
-
+import type { ButtonProps as AntdButtonProps } from '/@/components/Button';
 import type { FormItem } from './formItem';
 import type { ColEx, ComponentType } from './index';
 import type { TableActionType } from '/@/components/Table/src/types/table';
 import type { CSSProperties } from 'vue';
+import type { RowProps } from 'ant-design-vue/lib/grid/Row';
 
 export type FieldMapToTime = [string, [string, string], string?][];
 
@@ -37,7 +37,7 @@ export interface FormActionType {
   appendSchemaByField: (
     schema: FormSchema,
     prefixField: string | undefined,
-    first?: boolean | undefined
+    first?: boolean | undefined,
   ) => Promise<void>;
   validateFields: (nameList?: NamePath[]) => Promise<any>;
   validate: (nameList?: NamePath[]) => Promise<any>;
@@ -49,13 +49,20 @@ export type RegisterFn = (formInstance: FormActionType) => void;
 export type UseFormReturnType = [RegisterFn, FormActionType];
 
 export interface FormProps {
-  // layout?: 'vertical' | 'inline' | 'horizontal';
+  name?: string;
+  layout?: 'vertical' | 'inline' | 'horizontal';
   // Form value
   model?: Recordable;
   // The width of all items in the entire form
   labelWidth?: number | string;
+  // alignment
+  labelAlign?: 'left' | 'right';
+  // Row configuration for the entire form
+  rowProps?: RowProps;
   // Submit form on reset
   submitOnReset?: boolean;
+  // Submit form on form changing
+  submitOnChange?: boolean;
   // Col configuration for the entire form
   labelCol?: Partial<ColEx>;
   // Col configuration for the entire form
@@ -83,6 +90,8 @@ export interface FormProps {
   fieldMapToTime?: FieldMapToTime;
   // Placeholder is set automatically
   autoSetPlaceHolder?: boolean;
+  // Auto submit on press enter on input
+  autoSubmitOnEnter?: boolean;
   // Check whether the information is added to the label
   rulesMessageJoinLabel?: boolean;
   // Whether to show collapse and expand buttons
@@ -91,6 +100,8 @@ export interface FormProps {
   autoFocusFirstItem?: boolean;
   // Automatically collapse over the specified number of rows
   autoAdvancedLine?: number;
+  // Always show lines
+  alwaysShowLines?: number;
   // Whether to show the operation button
   showActionButtonGroup?: boolean;
 
@@ -121,11 +132,14 @@ export interface FormSchema {
   // Variable name bound to v-model Default value
   valueField?: string;
   // Label name
-  label: string;
+  label: string | VNode;
   // Auxiliary text
   subLabel?: string;
   // Help text on the right side of the text
-  helpMessage?: string | string[];
+  helpMessage?:
+    | string
+    | string[]
+    | ((renderCallbackParams: RenderCallbackParams) => string | string[]);
   // BaseHelp component props
   helpComponentProps?: Partial<HelpComponentProps>;
   // Label width, if it is passed, the labelCol and WrapperCol configured by itemProps will be invalid
@@ -144,7 +158,7 @@ export interface FormSchema {
       }) => Recordable)
     | object;
   // Required
-  required?: boolean;
+  required?: boolean | ((renderCallbackParams: RenderCallbackParams) => boolean);
 
   suffix?: string | number | ((values: RenderCallbackParams) => string | number);
 

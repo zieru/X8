@@ -31,13 +31,13 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: '开始时间',
-      width: 120,
+      width: 150,
       sorter: true,
       dataIndex: 'beginTime',
     },
     {
       title: '结束时间',
-      width: 120,
+      width: 150,
       sorter: true,
       dataIndex: 'endTime',
     },
@@ -123,13 +123,13 @@ export function getCustomHeaderColumns(): BasicColumn[] {
       // title: '姓名',
       dataIndex: 'name',
       width: 120,
-      slots: { title: 'customTitle' },
+      // slots: { title: 'customTitle' },
     },
     {
       // title: '地址',
       dataIndex: 'address',
       width: 120,
-      slots: { title: 'customAddress' },
+      // slots: { title: 'customAddress' },
       sorter: true,
     },
 

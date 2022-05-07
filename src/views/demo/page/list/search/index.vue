@@ -19,7 +19,7 @@
                   {{ item.content }}
                 </div>
                 <div :class="`${prefixCls}__action`">
-                  <template v-for="(action, index) in actions" :key="index">
+                  <template v-for="action in actions" :key="action.icon">
                     <div :class="`${prefixCls}__action-item`">
                       <Icon
                         v-if="action.icon"
@@ -38,7 +38,7 @@
                   {{ item.title }}
                 </p>
                 <div>
-                  <template v-for="(tag, index) in item.description" :key="`${index}`">
+                  <template v-for="tag in item.description" :key="tag">
                     <Tag class="mb-2">
                       {{ tag }}
                     </Tag>
@@ -129,7 +129,7 @@
     &__time {
       position: absolute;
       right: 20px;
-      color: rgba(0, 0, 0, 0.45);
+      color: rgb(0 0 0 / 45%);
     }
   }
 </style>
