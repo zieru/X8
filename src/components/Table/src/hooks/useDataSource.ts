@@ -12,8 +12,8 @@ import {
   watchEffect,
 } from 'vue';
 import { useTimeoutFn } from '@vben/hooks';
-import { buildUUID } from '/@/utils/uuid';
-import { isFunction, isBoolean, isObject } from '/@/utils/is';
+import { buildUUID } from '@/utils/uuid';
+import { isFunction, isBoolean, isObject } from '@/utils/is';
 import { get, cloneDeep, merge } from 'lodash-es';
 import { FETCH_SETTING, ROW_KEY, PAGE_SIZE } from '../const';
 
@@ -208,7 +208,7 @@ export function useDataSource(
 
   function insertTableDataRecord(
     record: Recordable | Recordable[],
-    index: number,
+    index?: number,
   ): Recordable[] | undefined {
     // if (!dataSourceRef.value || dataSourceRef.value.length == 0) return;
     index = index ?? dataSourceRef.value?.length;
@@ -349,7 +349,7 @@ export function useDataSource(
   }
 
   function setTableData<T = Recordable>(values: T[]) {
-    dataSourceRef.value = values;
+    dataSourceRef.value = values as Recordable[];
   }
 
   function getDataSource<T = Recordable>() {

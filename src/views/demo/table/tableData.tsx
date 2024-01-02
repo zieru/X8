@@ -1,7 +1,8 @@
-import { optionsListApi } from '/@/api/demo/select';
-import { FormProps, FormSchema } from '/@/components/Table';
-import { BasicColumn } from '/@/components/Table/src/types/table';
-import { VxeFormItemProps, VxeGridPropTypes } from '/@/components/VxeTable';
+import { optionsListApi } from '@/api/demo/select';
+import { FormProps, FormSchema, BasicColumn } from '@/components/Table';
+import { VxeFormItemProps, VxeGridPropTypes } from '@/components/VxeTable';
+import { ref } from 'vue';
+import { Input } from 'ant-design-vue';
 
 export function getBasicColumns(): BasicColumn[] {
   return [
@@ -73,6 +74,7 @@ export function getBasicShortColumns(): BasicColumn[] {
 }
 
 export function getMultipleHeaderColumns(): BasicColumn[] {
+  const testRef = ref('姓名:');
   return [
     {
       title: 'ID',
@@ -81,6 +83,11 @@ export function getMultipleHeaderColumns(): BasicColumn[] {
     },
     {
       title: '姓名',
+      customHeaderRender() {
+        return (
+          <Input placeholder="输入值 更新 自定义title" size="small" v-model:value={testRef.value} />
+        );
+      },
       dataIndex: 'name',
       width: 120,
     },
@@ -91,6 +98,15 @@ export function getMultipleHeaderColumns(): BasicColumn[] {
       children: [
         {
           title: '编号',
+          customHeaderRender(column) {
+            // 【自定义渲染的】
+            return (
+              <div>
+                _ <span style="background: #f00; color: #fff;">{testRef.value}</span> _
+                {column.customTitle}
+              </div>
+            );
+          },
           dataIndex: 'no',
           width: 120,
           filters: [
@@ -214,7 +230,7 @@ export function getMergeHeaderColumns(): BasicColumn[] {
   ];
 }
 export const getAdvanceSchema = (itemNumber = 6): FormSchema[] => {
-  const arr: any = [];
+  const arr: FormSchema[] = [];
   for (let index = 0; index < itemNumber; index++) {
     arr.push({
       field: `field${index}`,
@@ -236,7 +252,7 @@ export function getFormConfig(): Partial<FormProps> {
       {
         field: `field11`,
         label: `Slot示例`,
-        component: 'Select',
+        // component: 'Select',
         slot: 'custom',
         colProps: {
           xl: 12,

@@ -5,7 +5,7 @@
   <Modal
     title="JSON数据"
     :footer="null"
-    :visible="visible"
+    :open="visible"
     @cancel="handleCancel"
     :destroyOnClose="true"
     wrapClassName="v-code-modal"
@@ -49,6 +49,7 @@
 
       // 计算json数据
       const editorJson = computed(() => {
+        // @ts-ignore
         return JSON.stringify(removeAttrs(state.jsonData), null, '\t');
       });
 
